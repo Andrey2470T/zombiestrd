@@ -269,6 +269,7 @@ minetest.register_entity("zombiestrd:zombie",{
 	on_activate = mobkit.actfunc,		-- required
 	get_staticdata = mobkit.statfunc,
 											-- api props
+    head = "zombiestrd:zombie_head",
 	springiness=0,
 	buoyancy = 0.75,					-- portion of hitbox submerged
 	max_speed = 3,
@@ -332,6 +333,17 @@ minetest.register_entity("zombiestrd:zombie",{
 		end
 	end
 
+})
+minetest.register_entity("zombiestrd:zombie_head", {
+	visual = "mesh",
+	mesh = "zombie_normal.b3d",
+	head = true,
+	textures = {"mobs_zombie_head.png", "mobs_zombi2_head.png"},
+	collisionbox = {0, 0, 0, 0, 0, 0},
+	max_horizontal_angle = 82,      -- in degrees
+	max_up_angle = 87,
+	max_down_angle = 75,
+	pos = {x=0, y=0.5, z=0} -- mandatory, the head will be attached to the parent obj in this pos (relative to it)
 })
 
 minetest.register_entity("zombiestrd:shark",{

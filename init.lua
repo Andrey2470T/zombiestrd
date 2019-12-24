@@ -126,22 +126,35 @@ local function zombie_brain(self)
 					(not mobkit.is_there_yet2d(pos,minetest.yaw_to_dir(self.object:get_yaw()),pos2) or 
 					vector.length(plyr:get_player_velocity()) > 3) then
 						mobkit.make_sound(self,'misc')
+						mobkit.hq_turn_back_head(self, random(3, 7), 21)
 						mobkit.hq_hunt(self,20,plyr)
 						if random()<=0.5 then alert(pos) end
 					end
 				else
 					if vector.distance(pos,pos2) < self.view_range then
 						mobkit.make_sound(self,'misc')
+						mobkit.hq_turn_back_head(self, random(3, 7), 21)
 						mobkit.hq_hunt(self,20,plyr)
 						if random()<=0.5 then alert(pos) end
 					end
 				end
 			end
 		end
+	    
+		if prty == 0 then   -- looking at something during the standing or walking
+		        --minetest.debug("true")
+				local start_lookat = random(0, 1)
+				if start_lookat == 1 then
+					local types = {"node", "entity"}
+					mobkit.animate(self, "stand")
+					mobkit.hq_lookat_rand_pos(self, types[random(1, 2)], 2, 5, random(5, 15), 1)
+				end
+		end
 		
 		if mobkit.is_queue_empty_high(self) then
-			zombiestrd.hq_roam(self,0)
+		        zombiestrd.hq_roam(self,0)
 		end
+		--minetest.debug(dump(self.object:get_pos()) .. ": " .. dump(self.hqueue))
 	end
 end
 
@@ -263,13 +276,13 @@ minetest.register_entity("zombiestrd:zombie",{
 	mesh = "zombie_normal.b3d",
 	textures = {"mobs_zombie.png","mobs_zombi2.png"},
 	visual_size = {x = 1, y = 1},
-	static_save = true,
+	static_save = false,
 	timeout = 600,
 	on_step = mobkit.stepfunc,	-- required
 	on_activate = mobkit.actfunc,		-- required
 	get_staticdata = mobkit.statfunc,
 											-- api props
-    head = "zombiestrd:zombie_head",
+	head = "zombiestrd:zombie_head",
 	springiness=0,
 	buoyancy = 0.75,					-- portion of hitbox submerged
 	max_speed = 3,
@@ -337,13 +350,13 @@ minetest.register_entity("zombiestrd:zombie",{
 minetest.register_entity("zombiestrd:zombie_head", {
 	visual = "mesh",
 	mesh = "zombie_normal.b3d",
-	head = true,
+	static_save = false,
 	textures = {"mobs_zombie_head.png", "mobs_zombi2_head.png"},
 	collisionbox = {0, 0, 0, 0, 0, 0},
 	max_horizontal_angle = 82,      -- in degrees
 	max_up_angle = 87,
 	max_down_angle = 75,
-	pos = {x=0, y=0.5, z=0} -- mandatory, the head will be attached to the parent obj in this pos (relative to it)
+	pos = {x=0, y=-0.5, z=0} -- mandatory, the head will be attached to the parent obj in this pos (relative to it)
 })
 
 minetest.register_entity("zombiestrd:shark",{
